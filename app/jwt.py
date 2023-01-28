@@ -2,7 +2,14 @@ from fastapi import FastAPI, Security, HTTPException
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer
 from app import app
 
-access_security = JwtAccessBearer(secret_key="this_is_miyao", auto_error=False)
+try:
+    import config
+    jwt_key = config.jwtKey
+except ImportError:
+    jwt_key = "this_is_key"
+
+access_security = JwtAccessBearer(secret_key=jwt_key, auto_error=False)
+
 
 @app.post("/auth")
 def auth():

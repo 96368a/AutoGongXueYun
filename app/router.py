@@ -2,8 +2,7 @@ from app import app
 from starlette.responses import FileResponse
 import db
 import os
-
-from app import jwt
+from app.jwt import access_security
 
 @app.get("/")
 async def get_index():
@@ -17,11 +16,12 @@ async def get_static_files_or_404(whatever):
         return FileResponse(file_path)
     return {"code": "404"}
 
-@app.get("/h")
-def read_root():
-    return {"Hello": "World"}
-
-
 @app.get("/user/{phone}")
 def read_item(phone: int):
     return db.getOneByPhone(phone)
+
+@app.post("/login")
+def login():
+    """实现登录接口"""
+    data = {"userid":3984689}
+    return {"access_token": access_security.create_access_token(subject=data)}
