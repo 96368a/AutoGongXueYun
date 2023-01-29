@@ -218,3 +218,10 @@ class AES:
             for j in range(4):
                 state[i][j] = SBox[state[i][j]] if not iv else SBoxIV[state[i][j]]
         return state
+    
+def encrypt(text):
+    key = "23DbtQHR2UMbH6mJ"
+    aes = AES(key.encode("utf-8"))
+    res = aes.encrypt(text.encode('utf-8'))
+    msg = res.hex()
+    return msg

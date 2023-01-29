@@ -8,7 +8,7 @@ from hashlib import md5
 
 
 import requests
-from utils import AES,UTC as pytz
+from app.common.utils import AES,UTC as pytz
 
 import MessagePush
 
