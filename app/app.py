@@ -2,7 +2,7 @@ from app import app
 from starlette.responses import FileResponse
 import db
 import os
-from app.jwt import access_security
+from app.common.jwt import access_security
 
 @app.get("/")
 async def get_index():
