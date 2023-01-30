@@ -76,13 +76,15 @@ def login(user: UserInfo):
 
 @app.get("/api/config")
 def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_security)):
+    if currentUser is None:
+        raise HTTPException(status_code=401, detail='登录失效')
     userId = currentUser["userId"]
     config: Config = Config.get_or_none(Config.userId == userId)
     if config is None:
         return {"code": 400, "msg": "用户不存在"}
-    config.password = "123"
-    user = config.get()
-    # user.pop("password")
+    user = config.get().__data__
+    user['password'] = len(user['password']) * "*"
+    user.pop("token")
     return user
 
 @app.get("/api/status")
