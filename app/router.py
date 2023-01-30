@@ -9,10 +9,11 @@ import requests
 from app.common.utils import encrypt
 import time
 from typing import Union
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query,Security,HTTPException
 from pydantic import BaseModel, Field
 import json
 from app.model.config import Config,create_or_update as createConfig
+from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer
 
 @app.get("/")
 async def get_index():
@@ -71,11 +72,21 @@ def login(user: UserInfo):
     data = data["data"]
     createConfig(user.phone, user.password, data["token"], data["userId"])
     
-    return {"access_token": access_security.create_access_token(subject=data)}
+    return {"code":200,"msg":"登录成功","token": access_security.create_access_token(subject=data)}
 
 @app.get("/api/config")
-def getConfig(phone: Union[str, None] = Query(None, regex="^\d{11}$")):
-    config = Config.get_or_none(Config.phone == phone)
+def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_security)):
+    userId = currentUser["userId"]
+    config: Config = Config.get_or_none(Config.userId == userId)
     if config is None:
-        return {"code": "400", "msg": "用户不存在"}
-    return config.get().__data__
+        return {"code": 400, "msg": "用户不存在"}
+    config.password = "123"
+    user = config.get()
+    # user.pop("password")
+    return user
+
+@app.get("/api/status")
+def getConfig(credentials: JwtAuthorizationCredentials = Security(access_security)):
+    if not credentials:
+        raise HTTPException(status_code=401, detail='Unauthorized')
+    return {"code":200,"userId": credentials["userId"]}
