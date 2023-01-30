@@ -17,21 +17,17 @@ from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer
 
 @app.get("/")
 async def get_index():
-    return FileResponse('web/index.html')
+    return FileResponse('web/dist/index.html')
 
 
 # @app.get("/{whatever:path}")
 # async def get_static_files_or_404(whatever):
 #     # try open file for path
-#     file_path = os.path.join("web", whatever)
+#     file_path = os.path.join("web/dist", whatever)
 #     if os.path.isfile(file_path):
 #         return FileResponse(file_path)
-#     return {"code": "404"}
+#     return FileResponse('web/dist/index.html')
 
-
-@app.get("/user/{phone}")
-def read_item(phone: int):
-    return db.getOneByPhone(phone)
 
 
 class UserInfo(BaseModel):
