@@ -20,6 +20,7 @@
     "axios": "^1.2.6",
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.7",
+    "solid-js-form": "^0.1.8",
     "solid-transition-group": "^0.0.13",
     "unocss-preset-daisy": "^1.2.0"
   },

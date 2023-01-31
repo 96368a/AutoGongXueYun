@@ -13,42 +13,94 @@ export default function Index() {
 
   onMount(async () => {
     api.loginCheck().then((res) => {
-      console.log(res)
+      console.log(res);
+
+      if (res == false) {
+        navigate('/login')
+      }else{
+        navigate('/home')
+      }
     })
   });
 
   return (
-    <div>
-      <div class="i-carbon-campsite text-4xl inline-block" />
-      <p>
-        <a rel="noreferrer" href="https://github.com/antfu/vitesse-lite" target="_blank">
-          Vitesse Lite
-        </a>
-      </p>
-      <p>
-        <em class="text-sm op75">{t('intro.desc')}</em>
-      </p>
+    <div h-full>
+      <header>
+      </header>
+      <div class="flex">
+        <aside w-60>
+          <ul class="menu bg-base-100 w-56 p-2 rounded-box shadow-xl">
+            <li class="menu-title">
+              <span>Category</span>
+            </li>
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+            <li class="menu-title">
+              <span>Category</span>
+            </li>
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+          </ul>
+        </aside>
+        <main flex-auto>
+          <div class="card w-full bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">修改配置</h2>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="label cursor-pointer !justify-start gap-4">
+                  <span class="label-text">是否启用</span>
+                  <input type="checkbox" class="toggle" />
+                </label>
+                <label>
+                </label>
+                <label class="input-group">
+                  <span>手机号</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>密码</span>
+                  <input type="password" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>用户ID</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>计划ID</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>UA</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>经度</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>纬度</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>地址</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>描述</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+                <label class="input-group">
+                  <span>类型</span>
+                  <input type="text" class="input input-bordered" />
+                </label>
+              </div>
 
-      <div class="py-4" />
-
-      <input
-        onInput={e => setName(e.currentTarget.value)}
-        id="input"
-        placeholder={t('intro.whats-your-name')}
-        aria-label={t('intro.whats-your-name')}
-        type="text"
-        class="px-4 py-2 w-250px text-center bg-transparent outline-none outline-active:none border border-rounded border-gray-200 border-dark:gray-700"
-        onKeyDown={({ key }) => key === 'Enter' && go()}
-      />
-
-      <div>
-        <button
-          class="m-3 text-sm btn"
-          disabled={!name()}
-          onClick={go}
-        >
-          {t('button.go')}
-        </button>
+              <div class="card-actions justify-start">
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   )

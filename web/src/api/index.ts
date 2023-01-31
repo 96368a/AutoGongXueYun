@@ -20,7 +20,12 @@ const loginCheck = async () => {
     return api.get('/api/login').then((res) => true).catch((err) => false);
 };
 
+const getStatus = async () => {
+    return (await api.get('/api/config')).data;
+}
+
 export default {
     login,
     loginCheck,
+    getStatus,
 };
