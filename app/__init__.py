@@ -35,3 +35,4 @@ async def custom_http_exception_handler(request, exc):
 # app.mount("/assets", StaticFiles(directory="web/dist/assets"), name="assets")
 
 # 初始化路由
+from app import router

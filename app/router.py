@@ -83,7 +83,7 @@ def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_securit
     user.pop("token")
     return user
 
-@app.get("/api/status")
+@app.get("/api/login")
 def getConfig(credentials: JwtAuthorizationCredentials = Security(access_security)):
     if not credentials:
         raise HTTPException(status_code=401, detail='Unauthorized')

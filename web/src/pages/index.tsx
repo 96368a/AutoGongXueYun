@@ -1,3 +1,5 @@
+import api from "~/api"
+
 export default function Index() {
   const [name, setName] = createSignal('')
 
@@ -8,6 +10,12 @@ export default function Index() {
     if (name())
       navigate(`/hi/${encodeURIComponent(name())}`)
   }
+
+  onMount(async () => {
+    api.loginCheck().then((res) => {
+      console.log(res)
+    })
+  });
 
   return (
     <div>
