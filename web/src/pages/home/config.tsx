@@ -20,7 +20,9 @@ export default function Home() {
     onMount(async () => {
         api.getStatus().then((res) => {
             console.log(res);
-            setConfig(res.data)
+            setConfig(res)
+            console.log(config);
+            
         })
 
     })

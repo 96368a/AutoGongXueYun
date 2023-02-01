@@ -20,7 +20,7 @@ export default function Login() {
         api.login(phone(),password()).then(res=>{
             if(res.code==200){
                 alert("登录成功");
-                localStorage.setItem("token",res.data.token);
+                localStorage.setItem("token",res.token);
                 location.href="/";
             }else{
                 alert(res.msg);

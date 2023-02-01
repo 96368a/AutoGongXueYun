@@ -4,9 +4,12 @@ import path from 'path'
 import { defineConfig } from 'vite'
 import Solid from 'vite-plugin-solid'
 import Pages from 'vite-plugin-pages'
-import YamlImport from 'vite-plugin-yaml2'
+// import YamlImport from 'vite-plugin-yaml2'
+import pluginYaml from "vite-plugin-yaml2";
 import AutoImport from 'unplugin-auto-import/vite'
 import Unocss from 'unocss/vite'
+
+import devtools from 'solid-devtools/vite'
 
 export default defineConfig({
   resolve: {
@@ -19,7 +22,14 @@ export default defineConfig({
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
     Unocss(),
-
+    devtools({
+      locator: {
+        targetIDE: 'vscode',
+        componentLocation: true,
+        jsxLocation: true,
+      },
+      autoname: true, // e.g. enable autoname
+    }),
     Solid(),
 
     // https://github.com/hannoeru/vite-plugin-pages
@@ -38,7 +48,7 @@ export default defineConfig({
       ],
     }),
 
-    YamlImport(),
+    pluginYaml(),
   ],
 
   // https://github.com/vitest-dev/vitest
