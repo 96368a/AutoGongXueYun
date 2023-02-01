@@ -10,7 +10,7 @@ import { I18nProvider } from '~/components/I18nProvider'
 // import { HopeProvider } from '@hope-ui/solid'
 
 render(
-  () => (
+  () => ( 
     <I18nProvider dict={dict} locale="zh-CN">
       {/* <HopeProvider> */}
         <App />

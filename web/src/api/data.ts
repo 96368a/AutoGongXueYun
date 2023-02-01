@@ -5,8 +5,8 @@ export interface Config {
     planId: string
     enable: boolean
     userAgent: string
-    longitude: number
-    latitude: number
+    longitude: string
+    latitude: string
     address: string
     desc: string
     type: string
