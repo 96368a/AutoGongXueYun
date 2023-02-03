@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 import json
 from app.model.config import Config,create_or_update as createConfig
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer
+from app.common.utils import getSign
 
 @app.get("/")
 async def get_index():
@@ -82,6 +83,57 @@ def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_securit
     user['password'] = len(user['password']) * "*"
     user.pop("token")
     return user
+class UserConfig(BaseModel):
+    phone: Union[str, None] = Field(default=None, regex="^\d{11}$")
+    password: Union[str, None] = Field(
+        default=None, min_length=6, max_length=20)
+    planId: Union[str, None] = Field(default=None)
+    userAgent: Union[str, None] = Field(default=None)
+    longitude: Union[str, None] = Field(default=None)
+    latitude: Union[str, None] = Field(default=None)
+    address: Union[str, None] = Field(default=None)
+    desc: Union[str, None] = Field(default=None)
+    type: Union[str, None] = Field(default=None)
+    enable: Union[bool, None] = Field(default=None)
+    keepLogin: Union[bool, None] = Field(default=None)
+    randomLocation: Union[bool, None] = Field(default=None)
+    plusplusKey: Union[str, None] = Field(default=None)
+    ServerChanKey: Union[str, None] = Field(default=None)
+    
+    
+    
+@app.post("/api/config")
+def setConfig(newconfig: UserConfig,currentUser: JwtAuthorizationCredentials = Security(access_security)):
+    if currentUser is None:
+        raise HTTPException(status_code=401, detail='登录失效')
+    userId = currentUser["userId"]
+    config: Config = Config.get_or_none(Config.userId == userId)
+    if config is None:
+        return {"code": 400, "msg": "用户不存在"}
+    
+    print(newconfig)
+    
+    user = config.get().__data__
+    user['password'] = len(user['password']) * "*"
+    user.pop("token")
+    return user
+
+@app.get("/api/plan")
+def getPlan(currentUser: JwtAuthorizationCredentials = Security(access_security)):
+    url = "https://api.moguding.net:9000/practice/plan/v3/getPlanByStu"
+    data = {
+        "state": 1,
+        "t": encrypt(str(int(time.time() * 1000)))
+    }
+    headers2 = {
+        'roleKey': 'student',
+        "authorization": currentUser["token"],
+        "sign": getSign(currentUser["userId"]),
+        "content-type": "application/json; charset=UTF-8",
+    }
+    res = requests.post(url=url, data=json.dumps(data), headers=headers2)
+    return res.json()
+    
 
 @app.get("/api/login")
 def getConfig(credentials: JwtAuthorizationCredentials = Security(access_security)):

@@ -1,5 +1,5 @@
 from datetime import tzinfo,timedelta
-
+from hashlib import md5
 class UTC(tzinfo):
     """UTC"""
     def __init__(self,offset = 0):
@@ -225,3 +225,7 @@ def encrypt(text):
     res = aes.encrypt(text.encode('utf-8'))
     msg = res.hex()
     return msg
+
+def getSign(userId: str):
+    s = userId + 'student' + "3478cbbc33f84bd00d75d7dfa69e0daa"
+    return md5(s.encode("utf-8")).hexdigest()
