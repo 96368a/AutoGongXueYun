@@ -132,7 +132,10 @@ def getPlan(currentUser: JwtAuthorizationCredentials = Security(access_security)
         "content-type": "application/json; charset=UTF-8",
     }
     res = requests.post(url=url, data=json.dumps(data), headers=headers2)
-    return res.json()
+    data = res.json()
+    if data['code'] != 200:
+        raise HTTPException(status_code=data['code'], detail=data['msg'])
+    return data
     
 
 @app.get("/api/login")
