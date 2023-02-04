@@ -1,6 +1,6 @@
 from app import app
 from starlette.responses import FileResponse
-from app.common.loginUtils import loginCycle, loginUser
+from app.common.loginUtils import loginCycle, loginUser, refreshLogin
 from app.common.jwt import access_security
 import requests
 from app.common.utils import encrypt
@@ -94,7 +94,13 @@ def setConfig(newconfig: UserConfig,currentUser: JwtAuthorizationCredentials = S
     return user
 
 @app.get("/api/plan")
-def getPlan(currentUser: JwtAuthorizationCredentials = Security(access_security)):
+def getPlan(credentials: JwtAuthorizationCredentials = Security(access_security)):
+    currentUser = Config.get_or_none(Config.userId == credentials["userId"])
+    if currentUser is None:
+        return {"code": 400, "msg": "用户不存在"}
+    currentUser = currentUser.get().__data__
+    # 检查登录状态
+    refreshLogin(currentUser["phone"])
     url = "https://api.moguding.net:9000/practice/plan/v3/getPlanByStu"
     data = {
         "state": 1,
@@ -103,7 +109,7 @@ def getPlan(currentUser: JwtAuthorizationCredentials = Security(access_security)
     headers2 = {
         'roleKey': 'student',
         "authorization": currentUser["token"],
-        "sign": getSign(currentUser["userId"]),
+        "sign": getSign(str(currentUser["userId"])),
         "content-type": "application/json; charset=UTF-8",
     }
     res = requests.post(url=url, data=json.dumps(data), headers=headers2)

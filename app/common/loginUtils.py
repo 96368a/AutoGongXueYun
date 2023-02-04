@@ -4,7 +4,7 @@ from app.common.utils import encrypt
 import time
 import requests
 import json
-from app.model.config import create_or_update as createConfig
+from app.model.config import Config, create_or_update as createConfig
 
 def loginUser(phone, password):
     uuidStr = str(uuid.uuid4())
@@ -52,3 +52,27 @@ def loginCycle(phone,password):
             return {"code": "400", "msg": "登录失败，请重试"}
         else:
             time.sleep(1)
+            
+def refreshLogin(phone: str):
+    user = Config.get_or_none(Config.phone == phone)
+    if user is None:
+        return {"code": "400", "msg": "用户不存在"}
+    user = user.__data__
+    url = "https://api.moguding.net:9000/practice/quality/report/v1/existScore"
+    headers = {
+        "roleKey": "student",
+        "host": "api.moguding.net:9000",
+        "origin": "https://api.moguding.net",
+        "referer": "https://api.moguding.net/",
+        "content-type": "application/json; charset=UTF-8",
+        "Authorization": user["token"]
+    }
+    body = {
+        "t": encrypt(str(int(time.time() * 1000))),
+    }
+    res = requests.post(url, headers=headers, data=json.dumps(body), verify=False)
+    data = res.json()
+    if data["code"] == 401:
+        # token失效,重新登录
+        data = loginCycle(user["phone"], user["password"])
+        return data
