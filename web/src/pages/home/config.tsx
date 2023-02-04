@@ -17,18 +17,24 @@ export default function Home() {
         type: ''
     })
 
+    const [plans, setPlans] = createSignal([])
+
     onMount(async () => {
         api.getStatus().then((res) => {
             console.log(res);
             setConfig(res)
             console.log(config);
-            
+        })
+        api.getPlans().then((res) => {
+            console.log(res);
+            setPlans(res)
         })
 
     })
 
     function save() {
         console.log(config);
+        console.log(plans());
     }
 
     return (
@@ -52,16 +58,14 @@ export default function Home() {
                             <input type="password" class="input input-bordered" value={config.password} oninput={e => setConfig('password', e.currentTarget.value)} />
                         </label>
                         <label class="input-group">
-                            <span>用户ID</span>
-                            <input type="text" class="input input-bordered" value={config.userId} onchange={e => setConfig('userId', parseInt(e.currentTarget.value))} />
-                        </label>
-                        <label class="input-group">
-                            <span>计划ID</span>
-                            <input type="text" class="input input-bordered" value={config.planId} oninput={e => setConfig('planId', e.currentTarget.value)} />
-                        </label>
-                        <label class="input-group">
-                            <span>UA</span>
-                            <input type="text" class="input input-bordered" value={config.userAgent} oninput={e => setConfig('userAgent', e.currentTarget.value)} />
+                            <span>实习计划</span>
+                            <select class="select select-bordered w-full max-w-xs" value={config.planId} onChange={e=> setConfig('planId',e.currentTarget.value)}>
+                                <option selected value="">请选择实习计划</option>
+                                <For each={plans()}>
+                                    {plan => <option value={plan.planId}>{plan.planName}</option>}
+                                </For>
+                            </select>
+                            {/* <input type="text" class="input input-bordered" value={config.planId} oninput={e => setConfig('planId', e.currentTarget.value)} /> */}
                         </label>
                         <label class="input-group">
                             <span>经度</span>
@@ -81,7 +85,11 @@ export default function Home() {
                         </label>
                         <label class="input-group">
                             <span>类型</span>
-                            <input type="text" class="input input-bordered" value={config.type} oninput={e => setConfig('type', e.currentTarget.value)} />
+                            <select class="select select-bordered w-full max-w-xs" value={config.type} onChange={e=> setConfig('type',e.currentTarget.value)}>
+                                <option selected value="android">android</option>
+                                <option selected value="ios">ios</option>
+                                <option selected value="web">web</option>
+                            </select>
                         </label>
                     </div>
                     <div class="card-actions justify-start">

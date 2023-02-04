@@ -24,8 +24,13 @@ const getStatus = async () => {
     return (await api.get('/api/config')).data;
 }
 
+const getPlans = async () => {
+    return api.get('/api/plan').then((res) => res.data.data).catch((err) => []);
+}
+
 export default {
     login,
     loginCheck,
     getStatus,
+    getPlans,
 };

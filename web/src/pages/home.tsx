@@ -1,4 +1,4 @@
-import { Router, Routes, Route, Link } from "solid-app-router";
+import { Link } from "solid-app-router";
 
 export default function Home() {
     return (
@@ -9,19 +9,23 @@ export default function Home() {
                 <aside w-60>
                     <ul class="menu bg-base-100 w-56 p-2 rounded-box shadow-xl">
                         <li class="menu-title">
-                            <span>Category</span>
+                            <span>Fuck 工学云</span>
+                        </li>
+                        <li>
+                            <Link class="nav" href="/home">
+                                主页
+                            </Link>
                         </li>
                         <li>
                             <Link class="nav" href="/home/config">
-                                Home
+                                打卡配置
                             </Link>
                         </li>
-                        <li><a>Item 2</a></li>
-                        <li class="menu-title">
-                            <span>Category</span>
+                        <li>
+                            <Link class="nav" href="/home/logs">
+                                打卡日志
+                            </Link>
                         </li>
-                        <li><a>Item 1</a></li>
-                        <li><a>Item 2</a></li>
                     </ul>
                 </aside>
                 <main flex-auto>

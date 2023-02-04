@@ -15,7 +15,6 @@ specifiers:
   axios: ^1.3.0
   eslint: ^8.33.0
   jsdom: ^20.0.3
-  solform: ^1.0.7
   solid-app-router: ^0.4.2
   solid-devtools: ^0.24.7
   solid-js: ^1.6.10
@@ -41,7 +40,6 @@ dependencies:
   '@solid-primitives/storage': 1.3.4_solid-js@1.6.10
   '@stitches/core': 1.2.8
   axios: 1.3.0
-  solform: 1.0.7
   solid-app-router: 0.4.2_solid-js@1.6.10
   solid-js: 1.6.10
   solid-js-form: 0.1.8
@@ -5428,12 +5426,6 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
     dev: true
-
-  /solform/1.0.7:
-    resolution: {integrity: sha512-tuNyWyxM8DDvQREvBswSOlLCRMCEluEwW5MbGLP+0qlSF5bGaPkeWOpmpgtVCLAfxYoTBYYoZCtdT+s7XqXAmw==}
-    dependencies:
-      solid-js: 1.6.10
-    dev: false
 
   /solid-app-router/0.4.2_solid-js@1.6.10:
     resolution: {integrity: sha512-+NrLcmqYssx8DcbpcLBaYPqfTRtS+rkfbxMhLH8MHfTcTkdZfrkWQK7lsUvuPCebGEzfaPZJvHqBwhPrCXAmxg==}

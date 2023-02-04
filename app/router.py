@@ -59,11 +59,7 @@ def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_securit
     user.pop("token")
     return user
 class UserConfig(BaseModel):
-    phone: Union[str, None] = Field(default=None, regex="^\d{11}$")
-    password: Union[str, None] = Field(
-        default=None, min_length=6, max_length=20)
     planId: Union[str, None] = Field(default=None)
-    userAgent: Union[str, None] = Field(default=None)
     longitude: Union[str, None] = Field(default=None)
     latitude: Union[str, None] = Field(default=None)
     address: Union[str, None] = Field(default=None)
@@ -88,7 +84,7 @@ def setConfig(newconfig: UserConfig,currentUser: JwtAuthorizationCredentials = S
     
     print(newconfig)
     
-    user = config.get().__data__
+    user = config.get().__data__ 
     user['password'] = len(user['password']) * "*"
     user.pop("token")
     return user
