@@ -6,6 +6,7 @@ import requests
 import json
 from app.model.config import Config, create_or_update as createConfig
 
+
 def loginUser(phone, password):
     uuidStr = str(uuid.uuid4())
     # 获取一个验证码
@@ -33,7 +34,7 @@ def loginUser(phone, password):
              "uuid": uuidStr
              }
     res = requests.post('https://api.moguding.net:9000/session/user/v3/login',
-                        headers=headers,data=json.dumps(datas),verify=False)
+                        headers=headers, data=json.dumps(datas), verify=False)
     data = res.json()
     if data["code"] == 200:
         # return data
@@ -41,7 +42,8 @@ def loginUser(phone, password):
         createConfig(phone, password, data1["token"], data1["userId"])
     return data
 
-def loginCycle(phone,password):
+
+def loginCycle(phone, password):
     # 登录3次,如果3次都失败,则返回错误
     for i in range(3):
         data = loginUser(phone, password)
@@ -52,7 +54,8 @@ def loginCycle(phone,password):
             return {"code": "400", "msg": "登录失败，请重试"}
         else:
             time.sleep(1)
-            
+
+
 def refreshLogin(phone: str):
     user = Config.get_or_none(Config.phone == phone)
     if user is None:
@@ -66,11 +69,12 @@ def refreshLogin(phone: str):
         "referer": "https://api.moguding.net/",
         "content-type": "application/json; charset=UTF-8",
         "Authorization": user["token"]
-    }
+    } 
     body = {
         "t": encrypt(str(int(time.time() * 1000))),
     }
-    res = requests.post(url, headers=headers, data=json.dumps(body), verify=False)
+    res = requests.post(url, headers=headers,
+                        data=json.dumps(body), verify=False)
     data = res.json()
     if data["code"] == 401:
         # token失效,重新登录
