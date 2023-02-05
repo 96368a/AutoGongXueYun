@@ -10,4 +10,6 @@ export interface Config {
     address: string
     desc: string
     type: string
+    plusplusKey: string
+    serverChanKey: string
 }

@@ -20,7 +20,7 @@ const loginCheck = async () => {
     return api.get('/api/login').then((res) => true).catch((err) => false);
 };
 
-const getStatus = async () => {
+const getConfig = async () => {
     return (await api.get('/api/config')).data;
 }
 
@@ -28,14 +28,14 @@ const getPlans = async () => {
     return api.get('/api/plan').then((res) => res.data.data).catch((err) => []);
 }
 
-const getLocations = async () => {
-    return api.get('https://api.map.baidu.com/place/v2/search?query=公司$汽车$餐饮$购物$生活$体育$医院$住宿$风景$学校&location=27.256842,110.820747&radius=1000&output=json&ak=key').then((res) => res.data.results).catch((err) => []);
+const getLocations = async (location: string) => {
+    return api.get(`/api/place/search?location=${location}`).then((res) => res.data).catch((err) => []);
 }
 
 export default {
     login,
     loginCheck,
-    getStatus,
+    getConfig,
     getPlans,
     getLocations,
 };

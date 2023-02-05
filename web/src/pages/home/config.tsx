@@ -3,6 +3,7 @@ import { Config } from '~/api/data'
 
 export default function Home() {
 
+    let defaultConfig: Config
     let [config, setConfig] = createStore<Config>({
         phone: '',
         password: '',
@@ -14,35 +15,46 @@ export default function Home() {
         latitude: '',
         address: '',
         desc: '',
-        type: ''
+        type: '',
+        plusplusKey: '',
+        serverChanKey: '',
     })
 
     const [plans, setPlans] = createSignal([])
 
     onMount(async () => {
-        api.getStatus().then((res) => {
-            console.log(res);
+        api.getConfig().then((res) => {
+            // 初始化配置
             setConfig(res)
-            console.log(config);
+            defaultConfig = res
         })
         api.getPlans().then((res) => {
-            console.log(res);
+            // console.log(res);
             setPlans(res)
         })
 
     })
 
     function save() {
-        console.log(config);
+        let data = {}
+        Object.keys(config).forEach((key) => {
+            if(config[key] != defaultConfig[key]) {
+                data[key] = config[key]
+            }
+        })
+        console.log(data);
     }
 
     const handleGetLocation = () => {
         if(config.latitude && config.longitude) {
-            api.getLocations().then((res) => {
+            api.getLocations(config.latitude+","+config.longitude).then((res) => {
                 console.log(res);
-                // setConfig('latitude', res.latitude)
-                // setConfig('longitude', res.longitude)
-                setConfig('address', res.address)
+                if(res.code == 200 && res.data.length > 0) {
+                    const address = `${res.data[0].province} · ${res.data[0].city} · ${res.data[0].area} · ${res.data[0].name}`
+                    setConfig('address', address)
+                }else{
+                    setConfig('address', '获取地址失败')
+                }
             })
         }else {
             alert('请先填写经纬度')
@@ -110,6 +122,17 @@ export default function Home() {
                                 <option selected value="ios">ios</option>
                                 <option selected value="web">web</option>
                             </select>
+                        </label>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="flex flex-col gap-2">
+                        <label class="input-group">
+                            <span>plusplus推送key</span>
+                            <input type="text" class="input input-bordered" value={config.plusplusKey} oninput={e => setConfig('plusplusKey', e.currentTarget.value)} />
+                        </label>
+                        <label class="input-group">
+                            <span>server酱推送key</span>
+                            <input type="text" class="input input-bordered" value={config.serverChanKey} oninput={e => setConfig('serverChanKey', e.currentTarget.value)} />
                         </label>
                     </div>
                     <div class="divider"></div>
