@@ -6,7 +6,7 @@ class Config(Model):
     phone = CharField()
     password = CharField()
     token = CharField(1024)
-    userId = IntegerField()
+    userId = CharField()
     planId = CharField()
     enable = BooleanField()
     keepLogin = BooleanField()
@@ -19,7 +19,7 @@ class Config(Model):
     longitude = CharField()
     latitude = CharField()
     plusplusKey = CharField()
-    ServerChanKey = CharField()
+    serverChanKey = CharField()
     randomLocation = BooleanField()
     signCheck = BooleanField()
     desc = CharField()
@@ -29,9 +29,9 @@ class Config(Model):
         database = db  # This model uses the "people.db" database.
 
 
-def init():
-    db.connect()
-    db.create_tables([Config,])
+
+db.connect()
+db.create_tables([Config,])
 
 
 def create_or_update(phone, password, token, userId):
@@ -44,6 +44,6 @@ def create_or_update(phone, password, token, userId):
         config.save()
         return config
     config = Config.create(phone=phone, password=password, token=token, userId=userId, planId="", enable=False, keepLogin=False, userAgent="", country="", province="", city="",
-                           area="", address="", longitude="", latitude="", plusplusKey="", ServerChanKey="", randomLocation=True, signCheck=True, desc="", type="android")
+                           area="", address="", longitude="", latitude="", plusplusKey="", serverChanKey="", randomLocation=True, signCheck=True, desc="", type="android")
     config.save()
     return config
