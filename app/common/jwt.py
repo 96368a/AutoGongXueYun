@@ -9,4 +9,4 @@ try:
 except ImportError:
     jwt_key = "this_is_key"
 
-access_security = JwtAccessBearer(secret_key=jwt_key, auto_error=False,access_expires_delta=timedelta(days=256))
+access_security = JwtAccessBearer(secret_key=jwt_key, auto_error=False,access_expires_delta=timedelta(days=100))
