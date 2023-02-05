@@ -63,7 +63,7 @@ class UserConfig(BaseModel):
     keepLogin: Union[bool, None] = Field(default=None)
     randomLocation: Union[bool, None] = Field(default=None)
     plusplusKey: Union[str, None] = Field(default=None)
-    ServerChanKey: Union[str, None] = Field(default=None)
+    serverChanKey: Union[str, None] = Field(default=None)
 
 
 @app.post("/api/config")
@@ -75,12 +75,27 @@ def setConfig(newconfig: UserConfig, currentUser: JwtAuthorizationCredentials = 
     if config is None:
         return {"code": 400, "msg": "用户不存在"}
 
-    print(newconfig)
-
-    user = config.get().__data__
-    user['password'] = len(user['password']) * "*"
-    user.pop("token")
-    return user
+    if newconfig.planId is not None:
+        config.planId = newconfig.planId
+    if newconfig.longitude is not None:
+        config.longitude = newconfig.longitude
+    if newconfig.latitude is not None:
+        config.latitude = newconfig.latitude
+    if newconfig.address is not None:
+        config.address = newconfig.address
+    # if newconfig.desc is not None:
+    #     config.desc = newconfig.desc
+    if newconfig.type is not None:
+        config.type = newconfig.type
+    if newconfig.enable is not None:
+        config.enable = newconfig.enable
+    if newconfig.plusplusKey is not None:
+        config.plusplusKey = newconfig.plusplusKey
+    if newconfig.serverChanKey is not None:
+        config.serverChanKey = newconfig.serverChanKey
+    config.save()
+    return {"code": 200, "msg": "保存成功"}
+    # return user
 
 
 @app.get("/api/plan")
