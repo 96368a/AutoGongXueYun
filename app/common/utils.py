@@ -226,6 +226,6 @@ def encrypt(text):
     msg = res.hex()
     return msg
 
-def getSign(userId: str):
-    s = userId + 'student' + "3478cbbc33f84bd00d75d7dfa69e0daa"
+def getSign(text: str):
+    s = text + "3478cbbc33f84bd00d75d7dfa69e0daa"
     return md5(s.encode("utf-8")).hexdigest()

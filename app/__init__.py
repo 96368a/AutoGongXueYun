@@ -7,6 +7,8 @@ from fastapi.exception_handlers import (
 from starlette.responses import FileResponse
 import os
 
+taskList = []
+
 app = FastAPI()
 origins = [
     "http://localhost:5173",

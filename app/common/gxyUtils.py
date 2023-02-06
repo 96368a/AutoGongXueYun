@@ -1,6 +1,6 @@
 from app.common.captcha import getCode
 import uuid
-from app.common.utils import encrypt
+from app.common.utils import encrypt, getSign
 import time
 import requests
 import json
@@ -69,7 +69,7 @@ def refreshLogin(phone: str):
         "referer": "https://api.moguding.net/",
         "content-type": "application/json; charset=UTF-8",
         "Authorization": user["token"]
-    } 
+    }
     body = {
         "t": encrypt(str(int(time.time() * 1000))),
     }
@@ -80,3 +80,35 @@ def refreshLogin(phone: str):
         # token失效,重新登录
         data = loginCycle(user["phone"], user["password"])
         return data
+
+
+def sign(userId: str, signType: str):
+    user: Config = Config.get_or_none(Config.userId == userId)
+    if user is None:
+        return {"code": "400", "msg": "用户不存在"}
+
+    text = user.type + signType + user.planId + userId + user.address
+
+    headers2 = {
+        'roleKey': 'student',
+        "user-agent": user.userAgent,
+        "sign": getSign(text=text),
+        "authorization": user.token,
+        "content-type": "application/json; charset=UTF-8"
+    }
+    data = {
+        "country": user.country,
+        "address": user.address,
+        "province": user.province,
+        "city": user.city,
+        "area": user.area,
+        "latitude": user.latitude,
+        "longitude": user.longitude,
+        "description": user.desc,
+        "planId": user.planId,
+        "type": signType,
+        "device": user.type,
+    }
+    url = "https://api.moguding.net:9000/attendence/clock/v2/save"
+    res = requests.post(url=url, headers=headers2, data=json.dumps(data))
+    return res.json()["code"] == 200, res.json()["msg"]

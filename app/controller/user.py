@@ -3,7 +3,7 @@ import time
 import json
 from typing import Union
 from app import app
-from app.common.loginUtils import loginCycle, refreshLogin
+from app.common.gxyUtils import loginCycle, refreshLogin
 from app.common.jwt import access_security
 from app.common.utils import encrypt, getSign
 from app.model.config import Config
@@ -124,7 +124,7 @@ def getPlan(credentials: JwtAuthorizationCredentials = Security(access_security)
     headers2 = {
         'roleKey': 'student',
         "authorization": currentUser["token"],
-        "sign": getSign(str(currentUser["userId"])),
+        "sign": getSign(currentUser["userId"] + 'student'),
         "content-type": "application/json; charset=UTF-8",
     }
     res = requests.post(url=url, data=json.dumps(data), headers=headers2)
