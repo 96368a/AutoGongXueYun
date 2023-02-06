@@ -1,7 +1,7 @@
 export interface Config {
     phone: string
     password: string
-    userId: number
+    userId: string
     planId: string
     enable: boolean
     userAgent: string
@@ -12,4 +12,9 @@ export interface Config {
     type: string
     plusplusKey: string
     serverChanKey: string
+    [key: string]: any
+}
+
+export interface Empty {
+    [key: string]: any
 }

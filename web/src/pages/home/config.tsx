@@ -1,5 +1,5 @@
 import api from '~/api'
-import { Config } from '~/api/data'
+import { Config, Empty } from '~/api/data'
 
 export default function Home() {
 
@@ -7,7 +7,7 @@ export default function Home() {
     let [config, setConfig] = createStore<Config>({
         phone: '',
         password: '',
-        userId: 0,
+        userId: '',
         planId: '',
         enable: false,
         userAgent: '',
@@ -22,7 +22,7 @@ export default function Home() {
 
     const [plans, setPlans] = createSignal([])
 
-    onMount(async () => {
+    function initData() {
         api.getConfig().then((res) => {
             // 初始化配置
             setConfig(res)
@@ -32,31 +32,38 @@ export default function Home() {
             // console.log(res);
             setPlans(res)
         })
+    }
 
+    onMount(async () => {
+        initData()
     })
 
     function save() {
-        let data = {}
-        Object.keys(config).forEach((key) => {
-            if(config[key] != defaultConfig[key]) {
+        let data: Empty = {}
+        for (const key in config) {
+            if (config[key] != defaultConfig[key]) {
                 data[key] = config[key]
             }
-        })
+        }
         console.log(data);
+        api.saveConfig(data).then((res) => {
+            alert(res.msg)
+            initData()
+        })
     }
 
     const handleGetLocation = () => {
-        if(config.latitude && config.longitude) {
-            api.getLocations(config.latitude+","+config.longitude).then((res) => {
+        if (config.latitude && config.longitude) {
+            api.getLocations(config.latitude + "," + config.longitude).then((res) => {
                 console.log(res);
-                if(res.code == 200 && res.data.length > 0) {
+                if (res.code == 200 && res.data.length > 0) {
                     const address = `${res.data[0].province} · ${res.data[0].city} · ${res.data[0].area} · ${res.data[0].name}`
                     setConfig('address', address)
-                }else{
+                } else {
                     setConfig('address', '获取地址失败')
                 }
             })
-        }else {
+        } else {
             alert('请先填写经纬度')
         }
     }
@@ -86,9 +93,9 @@ export default function Home() {
                         <label class="input-group">
                             <span>实习计划</span>
                             <select class="select select-bordered w-full max-w-xs" value={config.planId} onChange={e => setConfig('planId', e.currentTarget.value)}>
-                                <option selected value="">请选择实习计划</option>
+                                <option selected={config.planId==''} value="">请选择实习计划</option>
                                 <For each={plans()}>
-                                    {plan => <option value={plan.planId}>{plan.planName}</option>}
+                                    {plan => <option selected={plan.planId==config.planId} value={plan.planId}>{plan.planName}</option>}
                                 </For>
                             </select>
                             {/* <input type="text" class="input input-bordered" value={config.planId} oninput={e => setConfig('planId', e.currentTarget.value)} /> */}
@@ -112,12 +119,12 @@ export default function Home() {
                                 <input type="text" class="input input-bordered min-w-100" value={config.address} oninput={e => setConfig('address', e.currentTarget.value)} />
                             </label>
                             <label class="flex items-center px-2 mx-2">
-                            <button class="btn btn-outline btn-info btn-xs" onclick={handleGetLocation}>获取地址</button>
+                                <button class="btn btn-outline btn-info btn-xs" onclick={handleGetLocation}>获取地址</button>
                             </label>
                         </div>
                         <label class="input-group">
                             <span>类型</span>
-                            <select class="select select-bordered w-full max-w-xs" value={config.type} onChange={e => setConfig('type', e.currentTarget.value)}>
+                            <select class="select select-bordered w-full max-w-xs" value={config.type} onCanPlay={e => setConfig('type', e.currentTarget.value)}>
                                 <option selected value="android">android</option>
                                 <option selected value="ios">ios</option>
                                 <option selected value="web">web</option>

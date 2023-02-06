@@ -32,10 +32,15 @@ const getLocations = async (location: string) => {
     return api.get(`/api/place/search?location=${location}`).then((res) => res.data).catch((err) => []);
 }
 
+const saveConfig = async (config: any) => {
+    return api.post('/api/config', config).then((res) => res.data).catch((err) => []);
+}
+
 export default {
     login,
     loginCheck,
     getConfig,
     getPlans,
     getLocations,
+    saveConfig,
 };
