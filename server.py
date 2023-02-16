@@ -3,7 +3,7 @@ import time
 import uvicorn
 from app import app
 from app.common.gxyUtils import testNetword
-import task
+# import task
 import schedule
 import os
 import config
