@@ -4,6 +4,13 @@ import uvicorn
 from app import app
 import task
 import schedule
+import os
+import config
+
+# 配置代理
+if config.proxy:
+    os.environ['http_proxy'] = config.proxy
+    os.environ['https_proxy'] = config.proxy
 
 def run_continuously(interval=1):
     cease_continuous_run = threading.Event()
