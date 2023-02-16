@@ -5,6 +5,7 @@ from typing import Union
 from app import app
 from app.common.gxyUtils import loginCycle, refreshLogin
 from app.common.jwt import access_security
+from app.common import task
 from app.common.utils import encrypt, getSign
 from app.model.config import Config
 from fastapi_jwt import JwtAuthorizationCredentials
@@ -106,16 +107,21 @@ def setConfig(newconfig: UserConfig, currentUser: JwtAuthorizationCredentials = 
     if newconfig.serverChanKey is not None:
         config.serverChanKey = newconfig.serverChanKey
     if newconfig.enable is not None:
-        if newconfig.enable:
-            if config.planId is None or config.planId == "":
-                return {"code": 400, "msg": "请先设置计划"}
-            if config.longitude is None or config.longitude == "":
-                return {"code": 400, "msg": "请先设置经度"}
-            if config.latitude is None or config.latitude == "":
-                return {"code": 400, "msg": "请先设置纬度"}
-            if config.address is None or config.address == "":
-                return {"code": 400, "msg": "请先设置地址"}
         config.enable = newconfig.enable
+        if config.enable:
+            task.startTask()
+        else:
+            task.stopTask(config.userId)
+    if config.enable:
+        if config.planId is None or config.planId == "":
+            return {"code": 400, "msg": "请先设置计划"}
+        if config.longitude is None or config.longitude == "":
+            return {"code": 400, "msg": "请先设置经度"}
+        if config.latitude is None or config.latitude == "":
+            return {"code": 400, "msg": "请先设置纬度"}
+        if config.address is None or config.address == "":
+            return {"code": 400, "msg": "请先设置地址"}
+    
     config.save()
     return {"code": 200, "msg": "保存成功"}
 

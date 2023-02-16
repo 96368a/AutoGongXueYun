@@ -81,7 +81,31 @@ def refreshLogin(phone: str):
         data = loginCycle(user["phone"], user["password"])
         return data
 
+def getSignLogs(userId: str):
+    user:Config = Config.get_or_none(Config.userId == userId)
+    if user is None:
+        return None
+    refreshLogin(user.phone)
+    url = "https://api.moguding.net:9000/attendence/clock/v1/list"
+    header = {
+        "content-type": "application/json;charset=UTF-8",
+        "rolekey": "student",
+        "host": "api.moguding.net:9000",
+        "authorization": user.token
+    }
+    t = str(int(time.time() * 1000))
+    data = {
+        "t": encrypt(t),
+        "currPage": 1,
+        "pageSize": 2,
+        "planId": user.planId,
+    }
+    res = requests.post(url=url, headers=header, data=json.dumps(data))
 
+    if res.json()["msg"] != 'success':
+        return None
+    return res.json()["data"]
+    
 def sign(userId: str, signType: str):
     user: Config = Config.get_or_none(Config.userId == userId)
     if user is None:

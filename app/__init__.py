@@ -7,7 +7,7 @@ from fastapi.exception_handlers import (
 from starlette.responses import FileResponse
 import os
 
-taskList = []
+taskList = dict()
 
 app = FastAPI()
 origins = [
