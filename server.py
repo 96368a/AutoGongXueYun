@@ -2,6 +2,7 @@ import threading
 import time
 import uvicorn
 from app import app
+from app.common.gxyUtils import testNetword
 import task
 import schedule
 import os
@@ -11,6 +12,17 @@ import config
 if config.proxy:
     os.environ['http_proxy'] = config.proxy
     os.environ['https_proxy'] = config.proxy
+# 检查网络
+res,data = testNetword()
+if res:
+    print("连接工学云服务器正常~")
+else:
+    if config.proxy:
+        print("代理服务器不可用，请检查代理配置")
+    else:
+        print("连接工学云服务器失败，请尝试配置代理")
+    exit(0)
+
 
 def run_continuously(interval=1):
     cease_continuous_run = threading.Event()

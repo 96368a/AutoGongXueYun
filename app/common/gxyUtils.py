@@ -136,3 +136,13 @@ def sign(userId: str, signType: str):
     url = "https://api.moguding.net:9000/attendence/clock/v2/save"
     res = requests.post(url=url, headers=headers2, data=json.dumps(data))
     return res.json()["code"] == 200, res.json()["msg"]
+
+def testNetword():
+    url = "https://api.moguding.net:9000"
+    try:
+        ip = requests.get("http://4.ipw.cn").text
+        requests.get(url,timeout=8)
+    except Exception as e:
+        e.with_traceback()
+        return False,{"code": "400", "msg": "网络错误",'ip':ip}
+    return True,{"code": "200", "msg": "网络正常",'ip':ip}
