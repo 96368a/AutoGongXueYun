@@ -7,6 +7,10 @@ export interface Config {
     userAgent: string
     longitude: string
     latitude: string
+    country: string
+    province: string
+    city: string
+    area: string
     address: string
     desc: string
     type: string

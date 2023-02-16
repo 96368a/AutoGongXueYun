@@ -11,6 +11,10 @@ export default function Home() {
         planId: '',
         enable: false,
         userAgent: '',
+        country: '',
+        province: '',
+        city: '',
+        area: '',
         longitude: '',
         latitude: '',
         address: '',
@@ -57,6 +61,10 @@ export default function Home() {
             api.getLocations(config.latitude + "," + config.longitude).then((res) => {
                 console.log(res);
                 if (res.code == 200 && res.data.length > 0) {
+                    setConfig('country', res.data[0].country)
+                    setConfig('province', res.data[0].province)
+                    setConfig('city', res.data[0].city)
+                    setConfig('area', res.data[0].area)
                     const address = `${res.data[0].province} · ${res.data[0].city} · ${res.data[0].area} · ${res.data[0].name}`
                     setConfig('address', address)
                 } else {

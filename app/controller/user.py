@@ -56,6 +56,10 @@ class UserConfig(BaseModel):
     planId: Union[str, None] = Field(default=None)
     longitude: Union[str, None] = Field(default=None)
     latitude: Union[str, None] = Field(default=None)
+    country: Union[str, None] = Field(default=None)
+    province: Union[str, None] = Field(default=None)
+    city: Union[str, None] = Field(default=None)
+    area: Union[str, None] = Field(default=None)
     address: Union[str, None] = Field(default=None)
     desc: Union[str, None] = Field(default=None)
     type: Union[str, None] = Field(default=None)
@@ -81,6 +85,14 @@ def setConfig(newconfig: UserConfig, currentUser: JwtAuthorizationCredentials = 
         config.longitude = newconfig.longitude
     if newconfig.latitude is not None:
         config.latitude = newconfig.latitude
+    if newconfig.country is not None:
+        config.country = newconfig.country
+    if newconfig.province is not None:
+        config.province = newconfig.province
+    if newconfig.city is not None:
+        config.city = newconfig.city
+    if newconfig.area is not None:
+        config.area = newconfig.area
     if newconfig.address is not None:
         config.address = newconfig.address
     # if newconfig.desc is not None:
