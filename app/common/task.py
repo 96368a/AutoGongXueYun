@@ -75,10 +75,11 @@ def signTask(config: Config,type: str):
 
 def test():
     # logs = gxyUtils.getSignLogs("104609356")
-    startTask()
+    # startTask()
     if '104609356' in taskList:
         for task in taskList['104609356']:
             print(task.next_run)
+        taskList['104609356'][1].run()
     # s = taskList['104609356']
     # s[0].run()
     print(111)

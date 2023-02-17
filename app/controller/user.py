@@ -12,6 +12,8 @@ from fastapi_jwt import JwtAuthorizationCredentials
 from fastapi import Security, HTTPException
 from pydantic import BaseModel, Field
 
+# 启动签到任务调度
+task.startTask()
 
 class UserInfo(BaseModel):
     phone: Union[str, None] = Field(default=None, regex="^\d{11}$")

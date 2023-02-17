@@ -3,7 +3,6 @@ import time
 import uvicorn
 from app import app
 from app.common.gxyUtils import testNetword
-# import task
 import schedule
 import os
 import config
@@ -37,6 +36,8 @@ def run_continuously(interval=1):
     continuous_thread = ScheduleThread()
     continuous_thread.start()
     return cease_continuous_run
+
+# import task
 
 if __name__ == "__main__":
     from app.model import config

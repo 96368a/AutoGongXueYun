@@ -117,6 +117,7 @@ def sign(userId: str, signType: str):
         'roleKey': 'student',
         "user-agent": user.userAgent,
         "sign": getSign(text=text),
+        "host": "api.moguding.net:9000",
         "authorization": user.token,
         "content-type": "application/json; charset=UTF-8"
     }
