@@ -1,12 +1,14 @@
 import datetime
+import threading
 from app.common.notice import sendPlusPlus, sendServerChan
 from app.model.config import Config
-from app import taskList
 from app.common import gxyUtils
 from app.common.utils import UTC as pytz
 import schedule
 import logging
 import time
+
+taskList = dict()
 
 # 启动schedule_logger的debug日志
 logging.basicConfig()
@@ -35,7 +37,7 @@ def signQueue(userId: str,type: str,sleepTime: int = 1):
     print(f"{userId}:{type}:{s.next_run}")
     
 # 负责启动任务调度
-def startTask():
+def startTasks():
     # 选择所有启用的用户
     users : list[Config] = Config.select().where(Config.enable == True)
     # 遍历用户，启动签到任务
@@ -53,6 +55,12 @@ def stopTask(userId: str):
         for task in taskList[userId]:
             schedule.cancel_job(task)
         del taskList[userId]
+
+# 取消所有任务
+def stopTasks():
+    for task in taskList.values():
+        for t in task:
+            schedule.cancel_job(t)
 
 # 执行签到任务
 def signTask(user: Config,type: str):
@@ -81,6 +89,7 @@ def signTask(user: Config,type: str):
                 sendPlusPlus(user.plusplusKey, title, content)
 
     return schedule.CancelJob
+
 
 def test():
     # logs = gxyUtils.getSignLogs("104609356")

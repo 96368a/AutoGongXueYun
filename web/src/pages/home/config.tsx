@@ -58,7 +58,7 @@ export default function Home() {
     if (config.latitude && config.longitude) {
       api.getLocations(`${config.latitude},${config.longitude}`).then((res) => {
         console.log(res)
-        if (res.code == 200 && res.data.length > 0) {
+        if (res.code === 200 && res.data.length > 0) {
           setConfig('country', res.data[0].country)
           setConfig('province', res.data[0].province)
           setConfig('city', res.data[0].city)
@@ -101,9 +101,9 @@ export default function Home() {
                         <label class="input-group">
                             <span>实习计划</span>
                             <select class="select select-bordered w-full max-w-xs" value={config.planId} onChange={e => setConfig('planId', e.currentTarget.value)}>
-                                <option selected={config.planId == ''} value="">请选择实习计划</option>
+                                <option selected={config.planId === ''} value="">请选择实习计划</option>
                                 <For each={plans()}>
-                                    {plan => <option selected={plan.planId == config.planId} value={plan.planId}>{plan.planName}</option>}
+                                    {plan => <option selected={plan.planId === config.planId} value={plan.planId}>{plan.planName}</option>}
                                 </For>
                             </select>
                             {/* <input type="text" class="input input-bordered" value={config.planId} oninput={e => setConfig('planId', e.currentTarget.value)} /> */}
