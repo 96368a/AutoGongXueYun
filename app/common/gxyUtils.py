@@ -109,7 +109,7 @@ def getSignLogs(userId: str):
 def sign(userId: str, signType: str):
     user: Config = Config.get_or_none(Config.userId == userId)
     if user is None:
-        return {"code": "400", "msg": "用户不存在"}
+        return False,"用户不存在"
 
     text = user.type + signType + user.planId + userId + user.address
 

@@ -1,4 +1,5 @@
 import datetime
+from app.common.notice import sendPlusPlus, sendServerChan
 from app.model.config import Config
 from app import taskList
 from app.common import gxyUtils
@@ -54,7 +55,7 @@ def stopTask(userId: str):
         del taskList[userId]
 
 # 执行签到任务
-def signTask(config: Config,type: str):
+def signTask(user: Config,type: str):
     # 获取签到日志
     logs = gxyUtils.getSignLogs("104609356")
     # 判断是否获取成功
@@ -69,19 +70,27 @@ def signTask(config: Config,type: str):
             return "今日签到已完成"
         if type=='START' and lastSignDate == nowDate and lastSignType == 'START':
             return "今日上班签到已完成"
-        gxyUtils.sign(config.userId, type)
+        res,msg=gxyUtils.sign(user.userId, type)
+        if res:
+            typeStr = '上班' if type=='START' else '下班'
+            title = f'工学云{typeStr}签到成功'
+            content = f'工学云用户{user.phone}{typeStr}签到成功'
+            if user.serverChanKey != '':
+                sendServerChan(user.serverChanKey, title, content)
+            if user.plusplusKey != '':
+                sendPlusPlus(user.plusplusKey, title, content)
 
     return schedule.CancelJob
 
 def test():
     # logs = gxyUtils.getSignLogs("104609356")
     # startTask()
-    if '104609356' in taskList:
-        for task in taskList['104609356']:
-            print(task.next_run)
-        taskList['104609356'][1].run()
-    # s = taskList['104609356']
-    # s[0].run()
+    # if '104609356' in taskList:
+        # for task in taskList['104609356']:
+            # print(task.next_run)
+        # taskList['104609356'][1].run()
+    s = taskList['104609356']
+    s[0].run()
     print(111)
     
     # schedule.every(5).seconds.do(signQueue, "104609356").tag("104609356",'end')
