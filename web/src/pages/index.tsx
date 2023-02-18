@@ -1,27 +1,20 @@
-import api from "~/api"
+import api from '~/api'
 
 export default function Index() {
-  const [name, setName] = createSignal('')
-
-  const [t] = useI18n()
+  // const [t] = useI18n()
 
   const navigate = useNavigate()
-  const go = () => {
-    if (name())
-      navigate(`/hi/${encodeURIComponent(name())}`)
-  }
 
   onMount(async () => {
     api.loginCheck().then((res) => {
-      console.log(res);
+      console.log(res)
 
-      if (res == false) {
+      if (res === false)
         navigate('/login')
-      }else{
+      else
         navigate('/home')
-      }
     })
-  });
+  })
 
   return (
     <div h-full>

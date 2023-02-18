@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 import Solid from 'vite-plugin-solid'
 import Pages from 'vite-plugin-pages'
 // import YamlImport from 'vite-plugin-yaml2'
-import pluginYaml from "vite-plugin-yaml2";
+import pluginYaml from 'vite-plugin-yaml2'
 import AutoImport from 'unplugin-auto-import/vite'
 import Unocss from 'unocss/vite'
 

@@ -1,82 +1,82 @@
 import api from '~/api'
-import { Config, Empty } from '~/api/data'
+import type { Config, Empty, Plan } from '~/api/data'
 
 export default function Home() {
+  let defaultConfig: Config
+  const [config, setConfig] = createStore<Config>({
+    phone: '',
+    password: '',
+    userId: '',
+    planId: '',
+    enable: false,
+    userAgent: '',
+    country: '',
+    province: '',
+    city: '',
+    area: '',
+    longitude: '',
+    latitude: '',
+    address: '',
+    desc: '',
+    type: '',
+    plusplusKey: '',
+    serverChanKey: '',
+  })
 
-    let defaultConfig: Config
-    let [config, setConfig] = createStore<Config>({
-        phone: '',
-        password: '',
-        userId: '',
-        planId: '',
-        enable: false,
-        userAgent: '',
-        country: '',
-        province: '',
-        city: '',
-        area: '',
-        longitude: '',
-        latitude: '',
-        address: '',
-        desc: '',
-        type: '',
-        plusplusKey: '',
-        serverChanKey: '',
+  const [plans, setPlans] = createSignal([] as Plan[])
+
+  function initData() {
+    api.getConfig().then((res) => {
+      // 初始化配置
+      setConfig(res)
+      defaultConfig = res
     })
-
-    const [plans, setPlans] = createSignal([])
-
-    function initData() {
-        api.getConfig().then((res) => {
-            // 初始化配置
-            setConfig(res)
-            defaultConfig = res
-        })
-        api.getPlans().then((res) => {
-            // console.log(res);
-            setPlans(res)
-        })
-    }
-
-    onMount(async () => {
-        initData()
+    api.getPlans().then((res) => {
+      // console.log(res);
+      setPlans(res as Plan[])
     })
+  }
 
-    function save() {
-        let data: Empty = {}
-        for (const key in config) {
-            if (config[key] != defaultConfig[key]) {
-                data[key] = config[key]
-            }
-        }
-        console.log(data);
-        api.saveConfig(data).then((res) => {
-            alert(res.msg)
-            initData()
-        })
+  onMount(async () => {
+    initData()
+  })
+
+  function save() {
+    const data: Empty = {}
+    for (const key in config) {
+      if (config[key] !== defaultConfig[key])
+        data[key] = config[key]
     }
+    console.log(data)
+    api.saveConfig(data).then((res) => {
+      alert(res.msg)
+      initData()
+    })
+  }
 
-    const handleGetLocation = () => {
-        if (config.latitude && config.longitude) {
-            api.getLocations(config.latitude + "," + config.longitude).then((res) => {
-                console.log(res);
-                if (res.code == 200 && res.data.length > 0) {
-                    setConfig('country', res.data[0].country)
-                    setConfig('province', res.data[0].province)
-                    setConfig('city', res.data[0].city)
-                    setConfig('area', res.data[0].area)
-                    const address = `${res.data[0].province} · ${res.data[0].city} · ${res.data[0].area} · ${res.data[0].name}`
-                    setConfig('address', address)
-                } else {
-                    setConfig('address', '获取地址失败')
-                }
-            })
-        } else {
-            alert('请先填写经纬度')
+  const handleGetLocation = () => {
+    if (config.latitude && config.longitude) {
+      api.getLocations(`${config.latitude},${config.longitude}`).then((res) => {
+        console.log(res)
+        if (res.code == 200 && res.data.length > 0) {
+          setConfig('country', res.data[0].country)
+          setConfig('province', res.data[0].province)
+          setConfig('city', res.data[0].city)
+          setConfig('area', res.data[0].area)
+          const address = `${res.data[0].province} · ${res.data[0].city} · ${res.data[0].area} · ${res.data[0].name}`
+          setConfig('address', address)
         }
+        else {
+          setConfig('address', '获取地址失败')
+        }
+      })
     }
+    else {
+      alert('请先填写经纬度')
+    }
+  }
 
-    return (
+  return (
         <div>
             <div class="card w-full bg-base-100 shadow-xl">
                 <div class="card-body">
@@ -101,9 +101,9 @@ export default function Home() {
                         <label class="input-group">
                             <span>实习计划</span>
                             <select class="select select-bordered w-full max-w-xs" value={config.planId} onChange={e => setConfig('planId', e.currentTarget.value)}>
-                                <option selected={config.planId==''} value="">请选择实习计划</option>
+                                <option selected={config.planId == ''} value="">请选择实习计划</option>
                                 <For each={plans()}>
-                                    {plan => <option selected={plan.planId==config.planId} value={plan.planId}>{plan.planName}</option>}
+                                    {plan => <option selected={plan.planId == config.planId} value={plan.planId}>{plan.planName}</option>}
                                 </For>
                             </select>
                             {/* <input type="text" class="input input-bordered" value={config.planId} oninput={e => setConfig('planId', e.currentTarget.value)} /> */}
@@ -157,5 +157,5 @@ export default function Home() {
                 </div>
             </div>
         </div>
-    )
+  )
 }

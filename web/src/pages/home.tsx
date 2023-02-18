@@ -1,7 +1,7 @@
-import { Link } from "solid-app-router";
+import { Link } from 'solid-app-router'
 
 export default function Home() {
-    return (
+  return (
         <div h-full>
             <header>
             </header>
@@ -33,5 +33,5 @@ export default function Home() {
                 </main>
             </div>
         </div>
-    )
+  )
 }
