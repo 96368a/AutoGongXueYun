@@ -144,6 +144,6 @@ def testNetword():
         ip = requests.get("http://4.ipw.cn").text
         requests.get(url,timeout=8)
     except Exception as e:
-        e.with_traceback()
+        # e.with_traceback()
         return False,{"code": "400", "msg": "网络错误",'ip':ip}
     return True,{"code": "200", "msg": "网络正常",'ip':ip}

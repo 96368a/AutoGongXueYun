@@ -74,10 +74,14 @@ def signTask(user: Config,type: str):
         # 获取最后一次签到的时间及类型
         lastSignDate = logs[0]["dateYmd"]
         lastSignType = logs[0]["type"]
+        # 防止重复签到
         if lastSignDate == nowDate and lastSignType == 'END':
             return "今日签到已完成"
+        if type=='END' and lastSignDate != nowDate:
+            return "今日尚未上班签到"
         if type=='START' and lastSignDate == nowDate and lastSignType == 'START':
             return "今日上班签到已完成"
+        # 签到并推送
         res,msg=gxyUtils.sign(user.userId, type)
         if res:
             typeStr = '上班' if type=='START' else '下班'
