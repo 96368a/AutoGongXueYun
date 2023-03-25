@@ -5,6 +5,53 @@ import time
 import requests
 import json
 from app.model.config import Config, create_or_update as createConfig
+import pickle
+import base64
+import config
+
+if config.requestProxy != None:
+
+    def postHook(url, data=None, json=None, **kwargs):
+        if (url.find("api.moguding.net:9000") != -1):
+            body = {
+                'method': 'POST',
+                'url': url,
+                'data': data,
+            }
+            headers = kwargs.get("headers", None)
+            if headers:
+                body["headers"] = headers
+            else:
+                body["headers"] = {
+                    "host": "api.moguding.net:9000",
+                }
+            body = pickle.dumps(body)
+            b = base64.b64encode(body)
+            res = requests.request("post", config.requestProxy, data=b)
+            return res
+        return requests.request("post", url, data=data, json=json, **kwargs)
+
+    def getHook(url, params=None, **kwargs):
+        if (url.find("api.moguding.net:9000") != -1):
+            body = {
+                'method': 'GET',
+                'url': url,
+            }
+            headers = kwargs.get("headers", None)
+            if headers:
+                body["headers"] = headers
+            else:
+                body["headers"] = {
+                    "host": "api.moguding.net:9000",
+                }
+            body = pickle.dumps(body)
+            b = base64.b64encode(body)
+            res = requests.request("post", config.requestProxy, data=b)
+            return res
+        return requests.request("get", url, params=params, **kwargs)
+
+    requests.post = postHook
+    requests.get = getHook
 
 
 def loginUser(phone, password):
@@ -81,8 +128,9 @@ def refreshLogin(phone: str):
         data = loginCycle(user["phone"], user["password"])
         return data
 
+
 def getSignLogs(userId: str):
-    user:Config = Config.get_or_none(Config.userId == userId)
+    user: Config = Config.get_or_none(Config.userId == userId)
     if user is None:
         return None
     refreshLogin(user.phone)
@@ -105,11 +153,12 @@ def getSignLogs(userId: str):
     if res.json()["msg"] != 'success':
         return None
     return res.json()["data"]
-    
+
+
 def sign(userId: str, signType: str):
     user: Config = Config.get_or_none(Config.userId == userId)
     if user is None:
-        return False,"用户不存在"
+        return False, "用户不存在"
 
     text = user.type + signType + user.planId + userId + user.address
 
@@ -138,12 +187,12 @@ def sign(userId: str, signType: str):
     res = requests.post(url=url, headers=headers2, data=json.dumps(data))
     return res.json()["code"] == 200, res.json()["msg"]
 
+
 def testNetword():
     url = "https://api.moguding.net:9000"
     try:
-        ip = requests.get("http://4.ipw.cn").text
-        requests.get(url,timeout=8)
+        res = requests.get(url, timeout=8)
     except Exception as e:
         # e.with_traceback()
-        return False,{"code": "400", "msg": "网络错误",'ip':ip}
-    return True,{"code": "200", "msg": "网络正常",'ip':ip}
+        return False, {"code": "400", "msg": "网络错误"}
+    return True, {"code": "200", "msg": "网络正常"}
