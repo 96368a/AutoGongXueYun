@@ -8,6 +8,7 @@ from app.model.config import Config, create_or_update as createConfig
 import pickle
 import base64
 import config
+from playhouse.shortcuts import model_to_dict
 
 if config.requestProxy != None:
 
@@ -47,7 +48,9 @@ if config.requestProxy != None:
             body = pickle.dumps(body)
             b = base64.b64encode(body)
             res = requests.request("post", config.requestProxy, data=b)
-            return res
+            b = base64.b64decode(res.text)
+            data = pickle.loads(b)
+            return data
         return requests.request("get", url, params=params, **kwargs)
 
     requests.post = postHook
@@ -107,7 +110,7 @@ def refreshLogin(phone: str):
     user = Config.get_or_none(Config.phone == phone)
     if user is None:
         return {"code": "400", "msg": "用户不存在"}
-    user = user.__data__
+    user = model_to_dict(user)
     url = "https://api.moguding.net:9000/practice/quality/report/v1/existScore"
     headers = {
         "roleKey": "student",

@@ -11,7 +11,7 @@ from app.model.config import Config
 from fastapi_jwt import JwtAuthorizationCredentials
 from fastapi import Security, HTTPException
 from pydantic import BaseModel, Field
-
+from playhouse.shortcuts import model_to_dict
 
 class UserInfo(BaseModel):
     phone: Union[str, None] = Field(default=None, regex="^\d{11}$")
@@ -47,7 +47,7 @@ def getConfig(currentUser: JwtAuthorizationCredentials = Security(access_securit
     config: Config = Config.get_or_none(Config.userId == userId)
     if config is None:
         return {"code": 400, "msg": "用户不存在"}
-    user = config.get().__data__
+    user = model_to_dict(config)
     user['password'] = len(user['password']) * "*"
     user.pop("token")
     return user
@@ -131,7 +131,7 @@ def getPlan(credentials: JwtAuthorizationCredentials = Security(access_security)
     currentUser = Config.get_or_none(Config.userId == credentials["userId"])
     if currentUser is None:
         return {"code": 400, "msg": "用户不存在"}
-    currentUser = currentUser.get().__data__
+    currentUser = model_to_dict(currentUser)
     # 检查登录状态
     refreshLogin(currentUser["phone"])
     url = "https://api.moguding.net:9000/practice/plan/v3/getPlanByStu"
