@@ -108,9 +108,7 @@ def setConfig(newconfig: UserConfig, currentUser: JwtAuthorizationCredentials = 
         config.serverChanKey = newconfig.serverChanKey
     if newconfig.enable is not None:
         config.enable = newconfig.enable
-        if config.enable:
-            task.startTasks()
-        else:
+        if not config.enable:
             task.stopTask(config.userId)
     if config.enable:
         if config.planId is None or config.planId == "":
@@ -123,6 +121,7 @@ def setConfig(newconfig: UserConfig, currentUser: JwtAuthorizationCredentials = 
             return {"code": 400, "msg": "请先设置地址"}
     
     config.save()
+    task.startTasks()
     return {"code": 200, "msg": "保存成功"}
 
 
