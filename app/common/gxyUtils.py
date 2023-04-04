@@ -195,6 +195,7 @@ def testNetword():
     url = "https://api.moguding.net:9000"
     try:
         res = requests.get(url, timeout=8)
+        # print(res)
     except Exception as e:
         # e.with_traceback()
         return False, {"code": "400", "msg": "网络错误"}

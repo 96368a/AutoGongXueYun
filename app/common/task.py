@@ -6,14 +6,8 @@ from app.common import gxyUtils
 from app.common.utils import UTC as pytz
 import schedule
 import logging
-import time
 
 taskList = dict()
-
-# 启动schedule_logger的debug日志
-logging.basicConfig()
-schedule_logger = logging.getLogger('schedule')
-schedule_logger.setLevel(level=logging.DEBUG)
 
 # 负责调度任务
 def signQueue(userId: str,type: str,sleepTime: int = 1):
@@ -32,7 +26,7 @@ def signQueue(userId: str,type: str,sleepTime: int = 1):
     if user.address is None or user.address == "":
         return False
     # 启动签到任务
-    print(f"启动签到任务\t{sleepTime}")
+    logging.info(f"用户{user.phone}启动签到任务{type}\t{sleepTime}")
     s = schedule.every(1).to(sleepTime).seconds.do(signTask, user,type).tag(userId,'sign')
     print(f"{userId}:{type}:{s.next_run}")
     
@@ -46,6 +40,7 @@ def startTasks():
             tasks = []
             tasks.append(schedule.every().day.at("07:50").do(signQueue, user.userId,"START",4000).tag(user.userId,'start'))
             tasks.append(schedule.every().day.at("17:50").do(signQueue, user.userId,"END",4000).tag(user.userId,'end'))
+            logging.info(f"用户{user.phone}启动签到任务调度~")
             taskList[user.userId] = tasks
     # schedule.run_all()
 

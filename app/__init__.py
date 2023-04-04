@@ -41,6 +41,8 @@ async def custom_http_exception_handler(request, exc):
 # 初始化路由
 from app.controller import base,user,common
 
+# 初始化日志
+from app.common import logger
 # 定时任务
 def run_continuously(interval=1):
     cease_continuous_run = threading.Event()

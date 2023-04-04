@@ -4,3 +4,4 @@ jwtKey = "this_is_key"
 baiduMapKey = "ak"
 # 可配置代理
 proxy=None
+requestProxy= None

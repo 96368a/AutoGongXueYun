@@ -5,7 +5,9 @@ from app import app
 from app.common.gxyUtils import testNetword
 import schedule
 import os
+from logging import info as print
 import config
+
 
 # 配置代理
 if config.proxy:
