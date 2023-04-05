@@ -1,6 +1,10 @@
 import { Link } from 'solid-app-router'
 
 export default function Home() {
+  const logout = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  }
   return (
         <div h-full>
             <header>
@@ -25,6 +29,11 @@ export default function Home() {
                             <Link class="nav" href="/home/logs">
                                 打卡日志
                             </Link>
+                        </li>
+                        <li>
+                            <a class="nav" href="#" onclick={logout}>
+                                注销登陆
+                            </a>
                         </li>
                     </ul>
                 </aside>

@@ -39,7 +39,7 @@ async def custom_http_exception_handler(request, exc):
 # app.mount("/assets", StaticFiles(directory="web/dist/assets"), name="assets")
 
 # 初始化路由
-from app.controller import base,user,common
+from app.controller import base,user,common,task
 
 # 初始化日志
 from app.common import logger
