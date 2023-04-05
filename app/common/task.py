@@ -62,7 +62,7 @@ def stopTasks():
 # 执行签到任务
 def signTask(user: Config,type: str):
     # 获取签到日志
-    logs = gxyUtils.getSignLogs("104609356")
+    logs = gxyUtils.getSignLogs(user.userId)
     # 判断是否获取成功
     if logs!=None and len(logs) > 0:
         # 获取PRC时区的当前时间
